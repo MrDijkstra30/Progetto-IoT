@@ -1,1 +1,1 @@
-Per aprire correttamente il file progetto.io inserirlo in una cartella denominata "progetto"
+Per aprire correttamente il file progettoDef.ino inserirlo in una cartella denominata "progettoDef"
