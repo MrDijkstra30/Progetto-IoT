@@ -77,16 +77,28 @@
                 echo "Errore nell'inserimento dei nel database: " . $connect->error;
         }
         if (isset($_GET['update'])) {
-            $update = $_GET['update'];
-            $sql = "UPDATE posti SET stato = FALSE, orarioUscita = NOW() WHERE targa = '$update'";
-            if ($connect->query($sql) === TRUE)
-                echo "Dati registrati con successo";
-            else
-                echo "Errore nell'inserimento dei nel database: " . $connect->error;
+            $targa = $_GET['update'];
+
+            // Cerca l'ID del record più recente con la targa specificata e stato = TRUE
+            $sql = "SELECT id FROM posti WHERE targa = '$targa' AND stato = TRUE ORDER BY orarioIng DESC LIMIT 1";
+            $result = $connect->query($sql);
+
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $id = $row['id'];
+
+                // Aggiorna il record trovato
+                $sql = "UPDATE posti SET stato = FALSE, orarioUscita = NOW() WHERE id = '$id'";
+                if ($connect->query($sql) === TRUE)
+                    echo "Dati aggiornati con successo";
+                else
+                    echo "Errore nell'aggiornamento del database: " . $connect->error;
+            } else {
+                echo "Nessun record trovato per la targa $targa con stato attivo.";
+            }
         }
     }
     ?>
-
 
 </head>
 
@@ -95,7 +107,6 @@
         <h1>Home Parcheggio</h1>
 
         <?php
-
         $query = "SELECT * FROM posti";
         $results = mysqli_query($connect, $query);
         if (!$results) {
@@ -115,8 +126,6 @@
         mysqli_close($connect);
         ?>
     </div>
-
-
 </body>
 
 </html>
