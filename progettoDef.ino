@@ -6,7 +6,6 @@
 const char* ssid = "Redmi Note 9 Pro"; // SSID della tua rete Wi-Fi
 const char* password = "forzabologna"; // Password della tua rete Wi-Fi
 
-//Your Domain name with URL path or IP address with path
 String serverName = "http://192.168.171.177/Progetto%20IoT/Parcheggio.php";
 
 unsigned long lastTime = 0;
