@@ -9,10 +9,7 @@ const char* password = "forzabologna"; // Password della tua rete Wi-Fi
 //Your Domain name with URL path or IP address with path
 String serverName = "http://192.168.171.177/Progetto%20IoT/Parcheggio.php";
 
-// the following variables are unsigned longs because the time, measured in
-// milliseconds, will quickly become a bigger number than can be stored in an int.
 unsigned long lastTime = 0;
-// Timer impostato a 1 minuto 
 unsigned long timerDelay = 500;
 
 // Definizione dei pin per i sensori ad ultrasuoni
@@ -70,9 +67,9 @@ void setup() {
 }
 
 void loop() {
-  //Send an HTTP POST request every timerDelay
+  //manda un HTTP POST ogni timerDelay
   if ((millis() - lastTime) > timerDelay) {
-    //Check WiFi connection status
+    //controlla stato connessione WiFi 
     if(WiFi.status()== WL_CONNECTED){
       HTTPClient http;
       
@@ -82,7 +79,7 @@ void loop() {
       // Gestione sbarra d'uscita
       gestisciUscita(http);
 
-      // Free resources
+      // Libera risorse
       http.end();
       // Attendi un breve intervallo prima di eseguire una nuova misurazione
       delay(100);
@@ -123,7 +120,6 @@ void gestisciIngresso(HTTPClient& http) {
       String serverPath = serverName + "?targa=" + targa;
       http.begin(serverPath.c_str());
 
-      // Send HTTP GET request
       int httpResponseCode = http.GET();
       
       if (httpResponseCode > 0) {
@@ -138,7 +134,7 @@ void gestisciIngresso(HTTPClient& http) {
 
       // Solleva la sbarra di ingresso di 90 gradi
       raiseBarrierIngresso();
-      delay(1000); // Attendi un secondo per evitare azioni multiple
+      delay(1500); // Attendi un secondo per evitare azioni multiple
     }
   } else {
     // Se la distanza è superiore al threshold, abbassa la sbarra
@@ -174,13 +170,12 @@ void gestisciUscita(HTTPClient& http) {
 
     // Solleva la sbarra di uscita di 90 gradi
     raiseBarrierUscita();
-    delay(1000); // Attendi un secondo per evitare azioni multiple
+    delay(2000); // Attendi un secondo per evitare azioni multiple
 
     if (targa != "") {
       String serverPath = serverName + "?update=" + targa;
       http.begin(serverPath.c_str());
 
-      // Send HTTP GET request
       int httpResponseCode = http.GET();
       
       if (httpResponseCode > 0) {
